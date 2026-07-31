@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>珍惜人生 · 時間倒計時</title>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-color: #e2b714;
+            --text-color: #f0f4f8;
+            --text-sub: #8a99ad;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 30%, #1a1f29 0%, var(--bg-color) 70%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .quote {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+        }
+
+        button.btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            margin-top: 10px;
+        }
+
+        button.btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 480px) {
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 10px;
+        }
+
+        .time-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent-color);
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-top: 5px;
+        }
+
+        .progress-container {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e2b714, #ff5e62);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>珍惜人生 · 倒計時</h1>
+    <p class="quote">「時間不是用來消磨的，而是用來盛放生命的。」</p>
+
+    <!-- 輸入出生日期與壽命區塊 -->
+    <div id="input-section">
+        <div class="form-group">
+            <label for="birthdate">出生日期</label>
+            <input type="date" id="birthdate" required>
+        </div>
+        <div class="form-group">
+            <label for="lifespan">預計壽命（歲）</label>
+            <input type="number" id="lifespan" value="80" min="1" max="150" required>
+        </div>
+        <button class="btn-primary" onclick="saveDataAndStart()">開啟人生倒計時</button>
+    </div>
+
+    <!-- 倒計時顯示區塊 -->
+    <div id="countdown-section" class="hidden">
+        <div class="countdown-grid">
+            <div class="time-box">
+                <div class="time-value" id="years">00</div>
+                <div class="time-label">年</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="months">00</div>
+                <div class="time-label">月</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="days">00</div>
+                <div class="time-label">天</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="hours">00</div>
+                <div class="time-label">小時</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="minutes">00</div>
+                <div class="time-label">分鐘</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="seconds">00.00</div>
+                <div class="time-label">秒</div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub);">
+                <span>人生已消耗：<span id="percent-text" style="color: #fff; font-weight: bold;">0.000000%</span></span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <button class="btn-reset" onclick="resetData()">重新設定設定值</button>
+    </div>
+</div>
+
+<script>
+    let timerInterval = null;
+
+    // 頁面載入時檢查是否曾輸入過資料，有則自動讀取
+    window.onload = function() {
+        const savedBirthdate = localStorage.getItem('life_birthdate');
+        const savedLifespan = localStorage.getItem('life_lifespan');
+
+        if (savedBirthdate && savedLifespan) {
+            document.getElementById('birthdate').value = savedBirthdate;
+            document.getElementById('lifespan').value = savedLifespan;
+            startCountdown(savedBirthdate, parseInt(savedLifespan));
+        }
+    };
+
+    function saveDataAndStart() {
+        const birthdate = document.getElementById('birthdate').value;
+        const lifespan = document.getElementById('lifespan').value;
+
+        if (!birthdate || !lifespan || lifespan <= 0) {
+            alert('請輸入有效的出生日期與預計壽命！');
+            return;
+        }
+
+        // 儲存至瀏覽器
+        localStorage.setItem('life_birthdate', birthdate);
+        localStorage.setItem('life_lifespan', lifespan);
+
+        startCountdown(birthdate, parseInt(lifespan));
+    }
+
+    function startCountdown(birthdateStr, lifespanYears) {
+        document.getElementById('input-section').classList.add('hidden');
+        document.getElementById('countdown-section').classList.remove('hidden');
+
+        const birthDate = new Date(birthdateStr);
+        const targetDate = new Date(birthDate);
+        targetDate.setFullYear(targetDate.getFullYear() + lifespanYears);
+
+        if (timerInterval) clearInterval(timerInterval);
+
+        // 每 10 毫秒（0.01 秒）刷新一次畫面
+        timerInterval = setInterval(() => {
+            const now = new Date();
+
+            if (now >= targetDate) {
+                clearInterval(timerInterval);
+                document.getElementById('seconds').innerText = "00.00";
+                document.getElementById('percent-text').innerText = "100.000000%";
+                document.getElementById('progress-fill').style.width = "100%";
+                alert("預計壽命時間已到，請珍惜當下的每一秒！");
+                return;
+            }
+
+            // 1. 計算剩餘 年、月、日、時、分、秒
+            const remaining = calculateRemaining(now, targetDate);
+
+            document.getElementById('years').innerText = padZero(remaining.years);
+            document.getElementById('months').innerText = padZero(remaining.months);
+            document.getElementById('days').innerText = padZero(remaining.days);
+            document.getElementById('hours').innerText = padZero(remaining.hours);
+            document.getElementById('minutes').innerText = padZero(remaining.minutes);
+            
+            const secStr = padZero(remaining.seconds);
+            const csStr = padZero(remaining.centiseconds);
+            document.getElementById('seconds').innerText = `${secStr}.${csStr}`;
+
+            // 2. 計算人生總進度百分比（精確至小數點後6位）
+            const totalDuration = targetDate.getTime() - birthDate.getTime();
+            const elapsed = now.getTime() - birthDate.getTime();
+            const percentage = (elapsed / totalDuration) * 100;
+            
+            const safePercent = Math.min(Math.max(percentage, 0), 100);
+            document.getElementById('percent-text').innerText = safePercent.toFixed(6) + '%';
+            document.getElementById('progress-fill').style.width = safePercent + '%';
+
+        }, 10);
+    }
+
+    // 日期精密計算（精準處理閏年與大大小月防溢位問題）
+    function calculateRemaining(now, target) {
+        let temp = new Date(now.getTime());
+
+        // 計算完整剩餘年份
+        let years = target.getFullYear() - temp.getFullYear();
+        let testDate = new Date(now.getTime());
+        testDate.setFullYear(testDate.getFullYear() + years);
+        if (testDate > target) {
+            years--;
+        }
+        temp.setFullYear(temp.getFullYear() + years);
+
+        // 計算完整剩餘月份（含月底天數防溢位機制）
+        let months = 0;
+        while (true) {
+            let nextMonth = new Date(temp.getTime());
+            let currentDay = temp.getDate();
+            
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
+            
+            if (nextMonth.getDate() !== currentDay) {
+                nextMonth.setDate(0); 
+            }
+
+            if (nextMonth <= target) {
+                months++;
+                temp = nextMonth;
+            } else {
+                break;
+            }
+        }
+
+        // 計算完整剩餘天數
+        let days = 0;
+        while (true) {
+            let nextDay = new Date(temp.getTime());
+            nextDay.setDate(nextDay.getDate() + 1);
+            if (nextDay <= target) {
+                days++;
+                temp = nextDay;
+            } else {
+                break;
+            }
+        }
+
+        // 計算剩餘 時、分、秒、0.01秒
+        let diff = target.getTime() - temp.getTime();
+
+        let hours = Math.floor(diff / 3600000);
+        diff %= 3600000;
+
+        let minutes = Math.floor(diff / 60000);
+        diff %= 60000;
+
+        let seconds = Math.floor(diff / 1000);
+        let centiseconds = Math.floor((diff % 1000) / 10);
+
+        return { years, months, days, hours, minutes, seconds, centiseconds };
+    }
+
+    function padZero(num) {
+        return num < 10 ? '0' + num : num;
+    }
+
+    function resetData() {
+        if (confirm("確定要重置輸入資料嗎？")) {
+            if (timerInterval) clearInterval(timerInterval);
+            localStorage.removeItem('life_birthdate');
+            localStorage.removeItem('life_lifespan');
+            document.getElementById('countdown-section').classList.add('hidden');
+            document.getElementById('input-section').classList.remove('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
