@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>珍惜人生 · 時間倒計時</title>
+    <title>生命倒數</title>
     <style>
         :root {
             --bg-color: #0d0f12;
@@ -184,8 +184,8 @@
 <body>
 
 <div class="container">
-    <h1>珍惜人生 · 倒計時</h1>
-    <p class="quote">「時間不是用來消磨的，而是用來盛放生命的。」</p>
+    <h1>生命倒數中</h1>
+    <p class="quote">「加油，你一定要活到頭啊。」</p>
 
     <!-- 輸入出生日期與壽命區塊 -->
     <div id="input-section">
@@ -197,7 +197,7 @@
             <label for="lifespan">預計壽命（歲）</label>
             <input type="number" id="lifespan" value="80" min="1" max="150" required>
         </div>
-        <button class="btn-primary" onclick="saveDataAndStart()">開啟人生倒計時</button>
+        <button class="btn-primary" onclick="saveDataAndStart()">開啟倒計時</button>
     </div>
 
     <!-- 倒計時顯示區塊 -->
@@ -231,7 +231,7 @@
 
         <div class="progress-container">
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub);">
-                <span>人生已消耗：<span id="percent-text" style="color: #fff; font-weight: bold;">0.000000%</span></span>
+                <span>地球Online通關進度：<span id="percent-text" style="color: #fff; font-weight: bold;">0.000000%</span></span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-fill"></div>
@@ -292,7 +292,7 @@
                 document.getElementById('seconds').innerText = "00.00";
                 document.getElementById('percent-text').innerText = "100.000000%";
                 document.getElementById('progress-fill').style.width = "100%";
-                alert("預計壽命時間已到，請珍惜當下的每一秒！");
+                alert("666你活到頭了！");
                 return;
             }
 
