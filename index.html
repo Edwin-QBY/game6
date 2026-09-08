@@ -384,7 +384,7 @@
         startCountdown(birthdate, parseInt(lifespan));
     }
 
-    function startCountdown(birthdateStr, lifespanYears) {
+        function startCountdown(birthdateStr, lifespanYears) {
         document.getElementById('input-section').classList.add('hidden');
         document.getElementById('countdown-section').classList.remove('hidden');
 
@@ -399,7 +399,7 @@
         // 每 10 毫秒（0.01 秒）刷新一次畫面
         timerInterval = setInterval(() => {
             const now = new Date();
-            if (now >= targetDate) {
+             if (now >= targetDate) {
                 clearInterval(timerInterval);
                 document.getElementById('seconds').innerText = "00.00";
                 document.getElementById('percent-text').innerText = "100.000000%";
@@ -410,7 +410,7 @@
             // 1. 人生總倒數
             if (now >= targetDate) {
                 document.getElementById('seconds').innerText = "00.00";
-                document.getElementById('percent-text').innerText = "100.000000%";
+                document.getElementById('percent-text').innerText = "100.00000000%";
                 document.getElementById('progress-fill').style.width = "100%";
             } else {
                 const remaining = calculateRemaining(now, targetDate);
@@ -425,16 +425,19 @@
                 const csStr = padZero(remaining.centiseconds);
                 document.getElementById('seconds').innerText = `${secStr}.${csStr}`;
 
+                // 2. 計算人生總進度百分比（超高精度：精確至小數點後 8 位）
                 const totalDuration = targetDate.getTime() - birthDate.getTime();
                 const elapsed = now.getTime() - birthDate.getTime();
                 const percentage = (elapsed / totalDuration) * 100;
                 
                 const safePercent = Math.min(Math.max(percentage, 0), 100);
-                document.getElementById('percent-text').innerText = safePercent.toFixed(6) + '%';
+                
+                // 改為 .toFixed(8)，小數點後第8位每隔約 0.025 秒就會變動一次！
+                document.getElementById('percent-text').innerText = safePercent.toFixed(8) + '%';
                 document.getElementById('progress-fill').style.width = safePercent + '%';
             }
 
-            // 2. 更新所有自訂事件倒數
+            // 3. 更新所有自訂事件倒數
             updateEventTimers(now);
 
         }, 10);
