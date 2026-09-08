@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>生命倒數</title>
+    <title>人生倒計時</title>
     <style>
         :root {
             --bg-color: #0d0f12;
@@ -12,6 +12,7 @@
             --accent-color: #e2b714;
             --text-color: #f0f4f8;
             --text-sub: #8a99ad;
+            --danger-color: #ff5e62;
         }
 
         * {
@@ -27,19 +28,19 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 30px 15px;
             background-image: radial-gradient(circle at 50% 30%, #1a1f29 0%, var(--bg-color) 70%);
         }
 
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 680px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             backdrop-filter: blur(12px);
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 35px 25px;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
             text-align: center;
         }
@@ -59,7 +60,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-align: left;
         }
 
@@ -108,8 +109,8 @@
         .countdown-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 30px 0;
+            gap: 12px;
+            margin: 25px 0;
         }
 
         @media (max-width: 480px) {
@@ -122,11 +123,11 @@
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 15px 10px;
+            padding: 15px 8px;
         }
 
         .time-value {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             font-family: 'Courier New', Courier, monospace;
             color: var(--accent-color);
@@ -139,7 +140,7 @@
         }
 
         .progress-container {
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: left;
         }
 
@@ -157,6 +158,84 @@
             background: linear-gradient(90deg, #e2b714, #ff5e62);
             width: 0%;
             transition: width 0.1s linear;
+        }
+
+        /* 自訂事件區塊樣式 */
+        .events-section {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px dashed var(--border-color);
+            text-align: left;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .add-event-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .event-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .event-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .event-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .event-target-date {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .event-timer {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .btn-delete {
+            background: rgba(255, 94, 98, 0.15);
+            border: 1px solid rgba(255, 94, 98, 0.3);
+            color: var(--danger-color);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 94, 98, 0.3);
         }
 
         .btn-reset {
@@ -184,8 +263,8 @@
 <body>
 
 <div class="container">
-    <h1>生命倒數中</h1>
-    <p class="quote">「加油，你一定要活到頭啊。」</p>
+    <h1>珍惜人生 · 時間倒計時</h1>
+    <p class="quote">「時間不是用來消磨的，而是用來盛放生命的。」</p>
 
     <!-- 輸入出生日期與壽命區塊 -->
     <div id="input-section">
@@ -197,10 +276,10 @@
             <label for="lifespan">預計壽命（歲）</label>
             <input type="number" id="lifespan" value="80" min="1" max="150" required>
         </div>
-        <button class="btn-primary" onclick="saveDataAndStart()">開啟倒計時</button>
+        <button class="btn-primary" onclick="saveDataAndStart()">開啟人生倒計時</button>
     </div>
 
-    <!-- 倒計時顯示區塊 -->
+    <!-- 倒計時顯示主區塊 -->
     <div id="countdown-section" class="hidden">
         <div class="countdown-grid">
             <div class="time-box">
@@ -231,24 +310,57 @@
 
         <div class="progress-container">
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub);">
-                <span>地球Online通關進度：<span id="percent-text" style="color: #fff; font-weight: bold;">0.000000%</span></span>
+                <span>人生已消耗：<span id="percent-text" style="color: #fff; font-weight: bold;">0.000000%</span></span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-fill"></div>
             </div>
         </div>
 
-        <button class="btn-reset" onclick="resetData()">重新設定設定值</button>
+        <!-- 自訂重要事件倒數區塊 -->
+        <div class="events-section">
+            <div class="section-title">
+                <span>📌 重要事件倒計時</span>
+            </div>
+
+            <!-- 新增事件表單 -->
+            <div class="add-event-box">
+                <div class="form-group">
+                    <label for="event-title">事件名稱</label>
+                    <input type="text" id="event-title" placeholder="例如：高考 / 畢業 / 2028奧運" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label for="event-datetime">目標日期與時間</label>
+                    <input type="datetime-local" id="event-datetime">
+                </div>
+                <button class="btn-primary" style="padding: 10px; margin-top: 5px;" onclick="addCustomEvent()">新增目標事件</button>
+            </div>
+
+            <!-- 事件清單列表 -->
+            <div id="events-list"></div>
+        </div>
+
+        <button class="btn-reset" onclick="resetData()">重新設定人生參數</button>
     </div>
 </div>
 
 <script>
     let timerInterval = null;
+    let customEvents = [];
 
-    // 頁面載入時檢查是否曾輸入過資料，有則自動讀取
+    // 頁面載入時檢查是否曾輸入過資料
     window.onload = function() {
         const savedBirthdate = localStorage.getItem('life_birthdate');
         const savedLifespan = localStorage.getItem('life_lifespan');
+        const savedEvents = localStorage.getItem('life_events');
+
+        if (savedEvents) {
+            try {
+                customEvents = JSON.parse(savedEvents);
+            } catch (e) {
+                customEvents = [];
+            }
+        }
 
         if (savedBirthdate && savedLifespan) {
             document.getElementById('birthdate').value = savedBirthdate;
@@ -266,7 +378,6 @@
             return;
         }
 
-        // 儲存至瀏覽器
         localStorage.setItem('life_birthdate', birthdate);
         localStorage.setItem('life_lifespan', lifespan);
 
@@ -276,6 +387,8 @@
     function startCountdown(birthdateStr, lifespanYears) {
         document.getElementById('input-section').classList.add('hidden');
         document.getElementById('countdown-section').classList.remove('hidden');
+
+        renderEventsList();
 
         const birthDate = new Date(birthdateStr);
         const targetDate = new Date(birthDate);
@@ -287,45 +400,134 @@
         timerInterval = setInterval(() => {
             const now = new Date();
 
+            // 1. 人生總倒數
             if (now >= targetDate) {
-                clearInterval(timerInterval);
                 document.getElementById('seconds').innerText = "00.00";
                 document.getElementById('percent-text').innerText = "100.000000%";
                 document.getElementById('progress-fill').style.width = "100%";
-                alert("666你活到頭了！");
-                return;
+            } else {
+                const remaining = calculateRemaining(now, targetDate);
+
+                document.getElementById('years').innerText = padZero(remaining.years);
+                document.getElementById('months').innerText = padZero(remaining.months);
+                document.getElementById('days').innerText = padZero(remaining.days);
+                document.getElementById('hours').innerText = padZero(remaining.hours);
+                document.getElementById('minutes').innerText = padZero(remaining.minutes);
+                
+                const secStr = padZero(remaining.seconds);
+                const csStr = padZero(remaining.centiseconds);
+                document.getElementById('seconds').innerText = `${secStr}.${csStr}`;
+
+                const totalDuration = targetDate.getTime() - birthDate.getTime();
+                const elapsed = now.getTime() - birthDate.getTime();
+                const percentage = (elapsed / totalDuration) * 100;
+                
+                const safePercent = Math.min(Math.max(percentage, 0), 100);
+                document.getElementById('percent-text').innerText = safePercent.toFixed(6) + '%';
+                document.getElementById('progress-fill').style.width = safePercent + '%';
             }
 
-            // 1. 計算剩餘 年、月、日、時、分、秒
-            const remaining = calculateRemaining(now, targetDate);
-
-            document.getElementById('years').innerText = padZero(remaining.years);
-            document.getElementById('months').innerText = padZero(remaining.months);
-            document.getElementById('days').innerText = padZero(remaining.days);
-            document.getElementById('hours').innerText = padZero(remaining.hours);
-            document.getElementById('minutes').innerText = padZero(remaining.minutes);
-            
-            const secStr = padZero(remaining.seconds);
-            const csStr = padZero(remaining.centiseconds);
-            document.getElementById('seconds').innerText = `${secStr}.${csStr}`;
-
-            // 2. 計算人生總進度百分比（精確至小數點後6位）
-            const totalDuration = targetDate.getTime() - birthDate.getTime();
-            const elapsed = now.getTime() - birthDate.getTime();
-            const percentage = (elapsed / totalDuration) * 100;
-            
-            const safePercent = Math.min(Math.max(percentage, 0), 100);
-            document.getElementById('percent-text').innerText = safePercent.toFixed(6) + '%';
-            document.getElementById('progress-fill').style.width = safePercent + '%';
+            // 2. 更新所有自訂事件倒數
+            updateEventTimers(now);
 
         }, 10);
+    }
+
+    // 新增自訂事件
+    function addCustomEvent() {
+        const titleInput = document.getElementById('event-title');
+        const datetimeInput = document.getElementById('event-datetime');
+
+        const title = titleInput.value.trim();
+        const datetime = datetimeInput.value;
+
+        if (!title || !datetime) {
+            alert('請填寫事件名稱與目標時間！');
+            return;
+        }
+
+        const newEvent = {
+            id: Date.now(),
+            title: title,
+            target: datetime
+        };
+
+        customEvents.push(newEvent);
+        saveEvents();
+        renderEventsList();
+
+        titleInput.value = '';
+        datetimeInput.value = '';
+    }
+
+    // 刪除自訂事件
+    function deleteEvent(id) {
+        customEvents = customEvents.filter(ev => ev.id !== id);
+        saveEvents();
+        renderEventsList();
+    }
+
+    function saveEvents() {
+        localStorage.setItem('life_events', JSON.stringify(customEvents));
+    }
+
+    // 渲染事件 DOM 結構
+    function renderEventsList() {
+        const listContainer = document.getElementById('events-list');
+        listContainer.innerHTML = '';
+
+        if (customEvents.length === 0) {
+            listContainer.innerHTML = '<div style="color: var(--text-sub); font-size: 0.85rem; text-align: center; padding: 10px;">目前尚無設定事件，可以在上方添加。</div>';
+            return;
+        }
+
+        customEvents.forEach(ev => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            
+            const formattedTarget = ev.target.replace('T', ' ');
+
+            card.innerHTML = `
+                <div class="event-info">
+                    <div class="event-name">${escapeHtml(ev.title)}</div>
+                    <div class="event-target-date">目標：${formattedTarget}</div>
+                </div>
+                <div class="event-timer" id="timer-ev-${ev.id}">計算中...</div>
+                <button class="btn-delete" onclick="deleteEvent(${ev.id})">刪除</button>
+            `;
+
+            listContainer.appendChild(card);
+        });
+    }
+
+    // 即時更新每個事件的時間文字
+    function updateEventTimers(now) {
+        customEvents.forEach(ev => {
+            const timerElem = document.getElementById(`timer-ev-${ev.id}`);
+            if (!timerElem) return;
+
+            const target = new Date(ev.target);
+            if (now >= target) {
+                timerElem.innerText = "已到達／已過去";
+                timerElem.style.color = "var(--text-sub)";
+            } else {
+                const rem = calculateRemaining(now, target);
+                
+                let text = '';
+                if (rem.years > 0) text += `${rem.years}年 `;
+                if (rem.months > 0 || rem.years > 0) text += `${rem.months}月 `;
+                text += `${rem.days}天 ${padZero(rem.hours)}:${padZero(rem.minutes)}:${padZero(rem.seconds)}`;
+
+                timerElem.innerText = text;
+                timerElem.style.color = "var(--accent-color)";
+            }
+        });
     }
 
     // 日期精密計算（精準處理閏年與大大小月防溢位問題）
     function calculateRemaining(now, target) {
         let temp = new Date(now.getTime());
 
-        // 計算完整剩餘年份
         let years = target.getFullYear() - temp.getFullYear();
         let testDate = new Date(now.getTime());
         testDate.setFullYear(testDate.getFullYear() + years);
@@ -334,7 +536,6 @@
         }
         temp.setFullYear(temp.getFullYear() + years);
 
-        // 計算完整剩餘月份（含月底天數防溢位機制）
         let months = 0;
         while (true) {
             let nextMonth = new Date(temp.getTime());
@@ -354,7 +555,6 @@
             }
         }
 
-        // 計算完整剩餘天數
         let days = 0;
         while (true) {
             let nextDay = new Date(temp.getTime());
@@ -367,7 +567,6 @@
             }
         }
 
-        // 計算剩餘 時、分、秒、0.01秒
         let diff = target.getTime() - temp.getTime();
 
         let hours = Math.floor(diff / 3600000);
@@ -386,8 +585,12 @@
         return num < 10 ? '0' + num : num;
     }
 
+    function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
     function resetData() {
-        if (confirm("確定要重置輸入資料嗎？")) {
+        if (confirm("確定要重置輸入資料嗎？（這不會刪除你的重要事件清單）")) {
             if (timerInterval) clearInterval(timerInterval);
             localStorage.removeItem('life_birthdate');
             localStorage.removeItem('life_lifespan');
